@@ -2,6 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import Listrik from '../../assets/Listrik.png'
 import Modal from '../Modal'
+import Money from '../../assets/money.svg'
 
 function Transaction() {
   const [value, setValue] = useState(0)
@@ -27,13 +28,16 @@ function Transaction() {
       </div>
       <form onSubmit={payBills} className='flex flex-col gap-2 my-10'>
         <label htmlFor="transaction" hidden ></label>
-        <input 
+        <div className='flex flex-row items-center gap-2 p-3 input'>
+          <img src={Money} alt="Nominal" className='w-[20px] h-[20px]'/>
+          <input 
             type="number" 
             name="transaction" 
             value={value} 
             readOnly
-            className='input'
-        />
+            className='border-none outline-none w-full'
+          />
+        </div>
         <button 
             type='submit' 
             className='button my-3'>

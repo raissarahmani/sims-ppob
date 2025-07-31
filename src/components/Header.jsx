@@ -19,7 +19,7 @@ function Header() {
 
   const clickedTransaction = () => {
     setActive("transaction")
-    navigate("/transaction")
+    navigate("/transaction/history")
   }
 
   const clickedAcc = () => {
