@@ -8,7 +8,7 @@ function Dashboard() {
   return (
     <div>
       <Header />
-      <div className='flex flex-row justify-between'>
+      <div className='flex flex-row gap-10 justify-between px-30 pt-10 pb-5 h-full'>
         <Welcome />
         <Balance />
       </div>

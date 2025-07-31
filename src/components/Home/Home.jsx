@@ -41,7 +41,7 @@ function Home() {
 
   return (
     <div className='px-30 py-5'>
-      <div className='flex flex-row gap-5 items-center my-5'>
+      <div className='flex flex-row justify-between items-center my-5'>
         {services.map((service, i) => (
           <Service key={i} image={service.image} name={service.name} />
         ))}
