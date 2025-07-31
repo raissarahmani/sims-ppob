@@ -68,7 +68,7 @@ function Topup() {
       </form>
       {isModalOpen && (
         <div className='fixed inset-0 bg-[#00000099] flex justify-center items-center z-3'>
-            <Modal setIsModalOpen={setIsModalOpen} value={value} />
+            <Modal setIsModalOpen={setIsModalOpen} value={value} type="topup" />
         </div>
       )}
     </div>
