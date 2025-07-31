@@ -1,0 +1,27 @@
+[
+    {
+        "id": 1,
+        "image": "Banner1.png",
+        "name": "Saldo Gratis"
+    },
+    {
+        "id": 2,
+        "image": "Banner2.png",
+        "name": "Diskon Listrik"
+    },
+    {
+        "id": 3,
+        "image": "Banner3.png",
+        "name": "Promo Makan"
+    },
+    {
+        "id": 4,
+        "image": "Banner4.png",
+        "name": "Cashback 25%"
+    },
+    {
+        "id": 5,
+        "image": "Banner5.png",
+        "name": "Buy 1 Get 2"
+    }
+]

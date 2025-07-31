@@ -1,0 +1,74 @@
+[
+    {
+        "id": 1,
+        "image": "PBB.png",
+        "name": "PBB",
+        "price": 500000
+    },
+    {
+        "id": 2,
+        "image": "Listrik.png",
+        "name": "Listrik",
+        "price": 500000
+    },
+    {
+        "id": 3,
+        "image": "Pulsa.png",
+        "name": "Pulsa",
+        "price": 20000
+    },
+    {
+        "id": 4,
+        "image": "PDAM.png",
+        "name": "PDAM",
+        "price": 100000
+    },
+    {
+        "id": 5,
+        "image": "PGN.png",
+        "name": "PGN",
+        "price": 200000
+    },
+    {
+        "id": 6,
+        "image": "Televisi.png",
+        "name": "TV Langganan",
+        "price": 100000
+    },
+    {
+        "id": 7,
+        "image": "Musik.png",
+        "name": "Musik",
+        "price": 50000
+    },
+    {
+        "id": 8,
+        "image": "Game.png",
+        "name": "Voucher Game",
+        "price": 700000
+    },
+    {
+        "id": 9,
+        "image": "VoucherMakanan.png",
+        "name": "Voucher Makanan",
+        "price": 200000
+    },
+    {
+        "id": 10,
+        "image": "Kurban.png",
+        "name": "Kurban",
+        "price": 1000000
+    },
+    {
+        "id": 11,
+        "image": "Zakat.png",
+        "name": "Zakat",
+        "price": 500000
+    },
+    {
+        "id": 12,
+        "image": "PaketData.png",
+        "name": "Paket Data",
+        "price": 100000
+    }
+]
