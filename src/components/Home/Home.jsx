@@ -1,4 +1,5 @@
 import React from 'react'
+import { useState, useRef } from 'react'
 import Service from './Service'
 import Banner from './Banner'
 
@@ -16,6 +17,28 @@ import Makanan from '../../assets/VoucherMakanan.png'
 import Zakat from '../../assets/Zakat.png'
 
 function Home() {
+  const containerRef = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [start, setStart] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+
+  const onMouseDown = (e) => {
+    setIsDragging(true);
+    setStart(e.pageX - containerRef.current.offsetLeft);
+    setScrollLeft(containerRef.current.scrollLeft);
+  };
+
+  const onMouseMove = (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - containerRef.current.offsetLeft;
+    const walk = (x - start) * 1.5; // speed factor
+    containerRef.current.scrollLeft = scrollLeft - walk;
+  };
+
+  const onMouseUp = () => setIsDragging(false);
+  const onMouseLeave = () => setIsDragging(false);
+
   const services = [
     { image: PBB, name: 'PBB' },
     { image: Listrik, name: 'Listrik' },
@@ -47,12 +70,18 @@ function Home() {
         ))}
       </div>
       <div className='text-xs font-semibold'>Temukan promo menarik</div>
-      <div className='flex flex-row gap-7 overflow-x-scroll no-scrollbar'>
+      <div 
+        className='flex flex-row gap-7 overflow-x-scroll no-scrollbar'
+        ref={containerRef}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseLeave}
+      >
         {banners.map((banner, i) => (
           <Banner key={i} src={banner.src} alt={banner.alt} />
         ))}
       </div>
-      
     </div>
   )
 }
