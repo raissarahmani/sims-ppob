@@ -1,13 +1,17 @@
 import React from 'react'
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import Modal from '../Modal'
 import Money from '../../assets/money.svg'
+
+import { selectService } from '../../redux/slices/transactionSlice'
 
 function Topup() {
   const [msg, setMsg] = useState("Silahkan topup dengan nominal yang sesuai")
   const [isVisible, setIsVisible] = useState(false)
-  const [value, setValue] = useState(0)
+  const [amount, setAmount] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const dispatch = useDispatch()
 
   const nominal = [
     {n: 10000},
@@ -21,21 +25,30 @@ function Topup() {
   const nominalValid = (e) => {
     e.preventDefault()
 
-    if (value < 10000) {
+    if (amount < 10000) {
       setIsVisible(true)
       setMsg("Minimum topup Rp 10.000")
-    } else if (value > 1000000) {
+    } else if (amount > 1000000) {
       setIsVisible(true)
       setMsg("Maximum topup Rp 1.000.000")
     } else {
       setIsVisible(false)
       setMsg("Silahkan topup dengan nominal yang sesuai")
-      setIsModalOpen(true)
+      topup()
     }
   }
+
+  const topup = () => {
+      const now = new Date()
+      const date = now.toLocaleDateString("id-ID")
+      const time = now.toLocaleTimeString("id-ID")
+  
+      dispatch(selectService( amount, date,time ))
+      setIsModalOpen(true)
+    }
  
   const handleAutofill = (val) => {
-    setValue(val);
+    setAmount(val);
   }
 
   return (
@@ -50,9 +63,9 @@ function Topup() {
               <input 
                 type="number" 
                 name="topup" 
-                value={value} 
+                value={amount} 
                 placeholder='Masukkan nominal topup'
-                onChange={(e) => setValue(e.target.value)} 
+                onChange={(e) => setAmount(e.target.value)} 
                 className='border-none outline-none w-full'
             />
             </div>
@@ -60,7 +73,7 @@ function Topup() {
             <p className={`error-msg ${isVisible ? "visible" : "invisible"}`}>{msg}</p>
             <button 
                 type='submit' 
-                disabled={!value || value == 0}
+                disabled={!amount || amount == 0}
                 className='button my-3 disabled:cursor-not-allowed'>
                     Top Up
             </button>
@@ -79,7 +92,7 @@ function Topup() {
       </form>
       {isModalOpen && (
         <div className='fixed inset-0 bg-[#00000099] flex justify-center items-center z-3'>
-            <Modal setIsModalOpen={setIsModalOpen} value={value} type="topup" />
+            <Modal setIsModalOpen={setIsModalOpen} value={amount} type="topup" />
         </div>
       )}
     </div>

@@ -1,10 +1,13 @@
 import React from 'react'
 import { useState, useRef } from 'react'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router'
 import Service from './Service'
 import Banner from './Banner'
 
 import ServiceList from '../../data/services.json'
 import BannerList from '../../data/banner.json'
+import { selectService } from '../../redux/slices/transactionSlice'
 
 const images = import.meta.glob('../../assets/*.png', { eager: true })
 
@@ -13,6 +16,14 @@ function getImage(filename) {
 }
 
 function Home() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  const chooseService = (service) => {
+    dispatch(selectService(service))
+    navigate("/transaction")
+  }
+
   const containerRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
   const [start, setStart] = useState(0);
@@ -39,7 +50,9 @@ function Home() {
     <div className='px-30 py-5'>
       <div className='flex flex-row justify-between items-center my-5'>
         {ServiceList.map((service) => (
-          <Service key={service.id} image={getImage(service.image)} name={service.name} />
+          <div key={service.id} onClick={() => chooseService(service)}>
+            <Service image={getImage(service.image)} name={service.name} />
+          </div>
         ))}
       </div>
       <div className='text-xs font-semibold'>Temukan promo menarik</div>

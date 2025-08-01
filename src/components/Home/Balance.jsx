@@ -1,10 +1,11 @@
 import React from 'react'
 import { useState } from 'react'
+import { useSelector } from 'react-redux'
 import Bg from '../../assets/BackgroundSaldo.png'
-
+  
 function Balance() {
   const [showBalance, setShowBalance] = useState(false)
-
+  const balance = useSelector((state) => state.transaction.balance) ?? 0
   const nominalBalance = () => {
     setShowBalance((showBalance) => !showBalance)
   }
@@ -17,7 +18,12 @@ function Balance() {
       <div className='text-[#c6c0c0] text-sm font-semibold'>Saldo anda</div>
       <div className='flex flex-row gap-2 my-2'>
         <div className='text-3xl text-[#fafaff] font-semibold'>Rp</div>
-        <input type={showBalance ? "number" : "password"}  className='text-3xl text-[#fafaff] font-semibold input-readonly'/>
+        <input 
+          type={showBalance ? "number" : "password"} 
+          value={balance}
+          readOnly  
+          className='text-3xl text-[#fafaff] font-semibold input-readonly'
+        />
       </div>
       <div className='flex flex-row relative'>
         <div className='text-[#c6c0c0] text-xs font-semibold'>Lihat saldo</div>
