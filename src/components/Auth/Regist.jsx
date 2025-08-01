@@ -1,11 +1,16 @@
 import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
+import { useDispatch, useSelector } from 'react-redux'
+import { register } from '../../redux/slices/authSlice'
+
 import EmailIcon from '../../assets/email.svg'
 import User from '../../assets/user.svg'
 import PassIcon from '../../assets/pass.svg'
 import SeeIcon from '../../assets/eye.svg'
 import HideIcon from '../../assets/eye2.svg'
+
+// const apiUrl = import.meta.env.VITE_API_URL;
 
 function Regist() {
   const [email, setEmail] = useState('')
@@ -15,74 +20,103 @@ function Regist() {
   const [confirmPass, setConfirmPass] = useState('')
   const [isPassVisible, setIsPassVisible] = useState(false)
   const [isConfirmPassVisible, setIsConfirmPassVisible] = useState(false)
+
+  const [emailMsg, setEmailMsg] = useState('')
+  const [firstnameMsg, setFirstnameMsg] = useState('')
+  const [lastnameMsg, setLastnameMsg] = useState('')
+  const [passMsg, setPassMsg] = useState('')
+  const [confirmPassMsg, setConfirmPassMsg] = useState('')
   const [msg, setMsg] = useState('')
+  
+  const [isEmailMsgVisible, setIsEmailMsgVisible] = useState(false)
+  const [isFirstnameMsgVisible, setIsFirstnameMsgVisible] = useState(false)
+  const [isLastnameMsgVisible, setIsLastnameMsgVisible] = useState(false)
+  const [isPassMsgVisible, setIsPassMsgVisible] = useState(false)
+  const [isConfirmPassMsgVisible, setIsConfirmPassMsgVisible] = useState(false)
   const [isMsgVisible, setIsMsgVisible] = useState(false)
+
+  const registeredUser = useSelector((state) => state.auth.user)
+  const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const loginValid = (e) => {
+  const registValid = (e) => {
     e.preventDefault()
 
     if (!email) {
-      setIsMsgVisible(true)
-      setMsg("Email should be filled")
+      setIsEmailMsgVisible(true)
+      setEmailMsg("Email harus diisi")
     } else if (!email.includes('@')) {
-      setIsMsgVisible(true)
-      setMsg ("Email not valid")
+      setIsEmailMsgVisible(true)
+      setEmailMsg ("Email tidak valid")
     } else {
-      setIsMsgVisible(false)
+      setIsEmailMsgVisible(false)
     }
 
     if (!firstname) {
-      setIsMsgVisible(true)
-      setMsg("First name should be filled")
+      setIsFirstnameMsgVisible(true)
+      setFirstnameMsg("Nama depan harus diisi")
     } else {
-      setIsMsgVisible(false)
+      setIsFirstnameMsgVisible(false)
     }
 
     if (!lastname) {
-      setIsMsgVisible(true)
-      setMsg("Last name should be filled")
+      setIsLastnameMsgVisible(true)
+      setLastnameMsg("Nama belakang harus diisi")
     } else {
-      setIsMsgVisible(false)
+      setIsLastnameMsgVisible(false)
     }
 
     if (!pass) {
-      setIsMsgVisible(true)
-      setMsg("Password should be filled")
-      return
+      setIsPassMsgVisible(true)
+      setPassMsg("Password harus diisi")
     } else if (pass.length < 8) {
-      setIsMsgVisible(true)
-      setMsg("Password should at least has 8 characters")
-      return
-    } setIsMsgVisible(false)
+      setIsPassMsgVisible(true)
+      setPassMsg("Password minimal 8 karakter")
+    } else {
+      setIsPassMsgVisible(false)
+    }
 
     if (!confirmPass) {
-      setIsMsgVisible(true)
-      setMsg("Retype your password")
+      setIsConfirmPassMsgVisible(true)
+      setConfirmPassMsg("Ketik ulang password anda")
       return
     } else if (confirmPass !== pass) {
-      setIsMsgVisible(true)
-      setMsg("Password should be the same")
+      setIsConfirmPassMsgVisible(true)
+      setConfirmPassMsg("Password tidak sama")
       return
-    } setIsMsgVisible(false)
+    } else {
+      setIsConfirmPassMsgVisible(false)
+    }
 
-    // fetch(`${VITE_API_URL}/users/login`, {
+    // demo only: checking email from redux store
+    if (registeredUser?.email === email) {
+      setIsMsgVisible(true)
+      setMsg("Email sudah terdaftar. Silahkan login")
+      return
+    } else {
+      setIsMsgVisible(true)
+      setMsg('Registrasi sukses. Silahkan login')
+    }
+
+    dispatch(register({
+        user: { email, firstname, lastname, pass }
+      }))
+
+    // fetch(`${apiUrl}/registration`, {
     //   method: 'POST',
     //   headers: {
     //     'Content-Type': 'application/json'
     //   },
-    //   body: JSON.stringify({ email, password: pass })
+    //   body: JSON.stringify({ email, firstname, lastname, pass })
     // })
     // .then(async (res) => {
     //   const data = await res.json()
     //   if (!res.ok) {
-    //     throw new Error(data.msg || 'Failed to login')
+    //     throw new Error(data.msg || 'Registrasi gagal')
     //   }
 
-    //   const token = data.token
-    //   dispatch(login({
-    //     token,
-    //     user: { email }
+    //   dispatch(register({
+    //     user: { email, firstname, lastname }
     //   }))
     // })
     // .catch((err) => {
@@ -91,7 +125,10 @@ function Regist() {
     // })
 
     setEmail('')
+    setFirstname('')
+    setLastname('')
     setPass('')
+    setConfirmPass('')
   }
 
   const resetValue = () => {
@@ -100,88 +137,95 @@ function Regist() {
   }
 
   return (
-    <div>
-      <div className='text-2xl text-center font-bold my-2 px-30'>Lengkapi data untuk membuat akun</div>
-      <form onSubmit={loginValid} className='flex flex-col items-center gap-2 mt-10 mb-5'>
-        <label htmlFor="email" hidden ></label>
-        <div className={`flex flex-row items-center gap-2 p-3 input w-3/4 ${isMsgVisible ? "border-[#f03c2e]" : "border-[#c6c0c0]"}`}>
-          <img src={EmailIcon} alt="Email" className='w-[15px] h-[15px]'/>
-          <input 
-            type="email" 
-            name="email" 
-            value={email} 
-            placeholder='Masukkan email anda'
-            onChange={(e) => setEmail(e.target.value)} 
-            className='border-none outline-none w-full'
-          />
-        </div>
-        <label htmlFor="firstname" hidden ></label>
-        <div className={`flex flex-row items-center gap-2 p-3 input w-3/4 ${isMsgVisible ? "border-[#f03c2e]" : "border-[#c6c0c0]"}`}>
-          <img src={User} alt="First name" className='w-[15px] h-[15px]'/>
-          <input 
-            type="text" 
-            name="firstname" 
-            value={firstname} 
-            placeholder='Masukkan nama depan anda'
-            onChange={(e) => setFirstname(e.target.value)} 
-            className='border-none outline-none w-full'
-          />
-        </div>
-        <label htmlFor="lastname" hidden ></label>
-        <div className={`flex flex-row items-center gap-2 p-3 input w-3/4 ${isMsgVisible ? "border-[#f03c2e]" : "border-[#c6c0c0]"}`}>
-          <img src={User} alt="Last name" className='w-[15px] h-[15px]'/>
-          <input 
-            type="text" 
-            name="lastname" 
-            value={lastname} 
-            placeholder='Masukkan nama belakang anda'
-            onChange={(e) => setLastname(e.target.value)} 
-            className='border-none outline-none w-full'
-          />
-        </div>
-        <label htmlFor="pass" hidden ></label>
-        <div className={`flex flex-row items-center gap-2 p-3 input w-3/4 ${isMsgVisible ? "border-[#f03c2e]" : "border-[#c6c0c0]"}`}>
-          <img src={PassIcon} alt="Password" className='w-[15px] h-[15px]'/>
-          <input 
-            type={`${isPassVisible ? "text" : "password"}`} 
-            name="pass" 
-            value={pass} 
-            placeholder='Masukkan password anda'
-            onChange={(e) => setPass(e.target.value)} 
-            className='border-none outline-none w-full'
-          />
-          {isPassVisible ? (
-            <img src={HideIcon} alt="Hide password" onClick={() => setIsPassVisible(false)} className='w-[15px] h-[15px]' />
-          ) : (
-            <img src={SeeIcon} alt="See password" onClick={() => setIsPassVisible(true)} className='w-[15px] h-[15px]' />
-          )}
-        </div>
-        <label htmlFor="confirmpass" hidden ></label>
-        <div className={`flex flex-row items-center gap-2 p-3 input w-3/4 ${isMsgVisible ? "border-[#f03c2e]" : "border-[#c6c0c0]"}`}>
-          <img src={PassIcon} alt="Confirm password" className='w-[15px] h-[15px]'/>
-          <input 
-            type={`${isConfirmPassVisible ? "text" : "password"}`} 
-            name="confirmpass" 
-            value={confirmPass} 
-            placeholder='Masukkan kembali password anda'
-            onChange={(e) => setConfirmPass(e.target.value)} 
-            className='border-none outline-none w-full'
-          />
-          {isConfirmPassVisible ? (
-            <img src={HideIcon} alt="Hide password" onClick={() => setIsConfirmPassVisible(false)} className='w-[15px] h-[15px]' />
-          ) : (
-            <img src={SeeIcon} alt="See password" onClick={() => setIsConfirmPassVisible(true)} className='w-[15px] h-[15px]' />
-          )}
-        </div>
-        <button 
-            type='submit' 
-            className='button my-3 w-3/4'>
-                Registrasi
-        </button>
-      </form>
-      <div className='text-xs text-center text-[#c6c0c0] font-semibold'>Sudah punya akun? Login <span onClick={() => navigate('/login')} className='text-[#f03c2e] font-bold cursor-pointer'>di sini</span></div>
+    <div className='flex flex-col gap-10'>
+      <div>
+        <div className='text-2xl text-center font-bold my-2 px-30'>Lengkapi data untuk membuat akun</div>
+        <form onSubmit={registValid} className='flex flex-col gap-2 mt-10 mb-5 px-10'>
+          <label htmlFor="email" hidden ></label>
+          <div className={`flex flex-row items-center gap-2 p-3 input w-full ${isEmailMsgVisible ? "border-[#f03c2e]" : "border-[#c6c0c0]"}`}>
+            <img src={EmailIcon} alt="Email" className='w-[15px] h-[15px]'/>
+            <input 
+              type="email" 
+              name="email" 
+              value={email} 
+              placeholder='Masukkan email anda'
+              onChange={(e) => setEmail(e.target.value)} 
+              className='border-none outline-none w-full'
+            />
+          </div>
+          <p className={`error-msg text-right ${isEmailMsgVisible ? "visible" : "invisible"}`}>{emailMsg}</p>
+          <label htmlFor="firstname" hidden ></label>
+          <div className={`flex flex-row items-center gap-2 p-3 input w-full ${isFirstnameMsgVisible ? "border-[#f03c2e]" : "border-[#c6c0c0]"}`}>
+            <img src={User} alt="First name" className='w-[15px] h-[15px]'/>
+            <input 
+              type="text" 
+              name="firstname" 
+              value={firstname} 
+              placeholder='Masukkan nama depan anda'
+              onChange={(e) => setFirstname(e.target.value)} 
+              className='border-none outline-none w-full'
+            />
+          </div>
+          <p className={`error-msg text-right ${isFirstnameMsgVisible ? "visible" : "invisible"}`}>{firstnameMsg}</p>
+          <label htmlFor="lastname" hidden ></label>
+          <div className={`flex flex-row items-center gap-2 p-3 input w-full ${isLastnameMsgVisible ? "border-[#f03c2e]" : "border-[#c6c0c0]"}`}>
+            <img src={User} alt="Last name" className='w-[15px] h-[15px]'/>
+            <input 
+              type="text" 
+              name="lastname" 
+              value={lastname} 
+              placeholder='Masukkan nama belakang anda'
+              onChange={(e) => setLastname(e.target.value)} 
+              className='border-none outline-none w-full'
+            />
+          </div>
+          <p className={`error-msg text-right ${isLastnameMsgVisible ? "visible" : "invisible"}`}>{lastnameMsg}</p>
+          <label htmlFor="pass" hidden ></label>
+          <div className={`flex flex-row items-center gap-2 p-3 input w-full ${isPassMsgVisible ? "border-[#f03c2e]" : "border-[#c6c0c0]"}`}>
+            <img src={PassIcon} alt="Password" className='w-[15px] h-[15px]'/>
+            <input 
+              type={`${isPassVisible ? "text" : "password"}`} 
+              name="pass" 
+              value={pass} 
+              placeholder='Masukkan password anda'
+              onChange={(e) => setPass(e.target.value)} 
+              className='border-none outline-none w-full'
+            />
+            {isPassVisible ? (
+              <img src={HideIcon} alt="Hide password" onClick={() => setIsPassVisible(false)} className='w-[15px] h-[15px] cursor-pointer' />
+            ) : (
+              <img src={SeeIcon} alt="See password" onClick={() => setIsPassVisible(true)} className='w-[15px] h-[15px] cursor-pointer' />
+            )}
+          </div>
+          <p className={`error-msg text-right ${isPassMsgVisible ? "visible" : "invisible"}`}>{passMsg}</p>
+          <label htmlFor="confirmpass" hidden ></label>
+          <div className={`flex flex-row items-center gap-2 p-3 input w-full ${isConfirmPassMsgVisible ? "border-[#f03c2e]" : "border-[#c6c0c0]"}`}>
+            <img src={PassIcon} alt="Confirm password" className='w-[15px] h-[15px]'/>
+            <input 
+              type={`${isConfirmPassVisible ? "text" : "password"}`} 
+              name="confirmpass" 
+              value={confirmPass} 
+              placeholder='Masukkan kembali password anda'
+              onChange={(e) => setConfirmPass(e.target.value)} 
+              className='border-none outline-none w-full'
+            />
+            {isConfirmPassVisible ? (
+              <img src={HideIcon} alt="Hide password" onClick={() => setIsConfirmPassVisible(false)} className='w-[15px] h-[15px] cursor-pointer' />
+            ) : (
+              <img src={SeeIcon} alt="See password" onClick={() => setIsConfirmPassVisible(true)} className='w-[15px] h-[15px] cursor-pointer' />
+            )}
+          </div>
+          <p className={`error-msg text-right ${isConfirmPassMsgVisible ? "visible" : "invisible"}`}>{confirmPassMsg}</p>
+          <button 
+              type='submit' 
+              className='button my-3 w-full'>
+                  Registrasi
+          </button>
+        </form>
+        <div className='text-xs text-center text-[#c6c0c0] font-semibold'>Sudah punya akun? Login <span onClick={() => navigate('/login')} className='text-[#f03c2e] font-bold cursor-pointer'>di sini</span></div>
+      </div>
       <div 
-        className={`flex flex-row justify-between items-center error-msg mt-2 py-2 px-5 bg-[#fff5f3] ${isMsgVisible ? "visible" : "invisible"}`}>
+        className={`status-msg ${isMsgVisible ? "visible" : "invisible"} ${registeredUser.email !== email ? "text-[#64c8b4]" : "text-[#f03c2e]"}`}>
           <div>{msg}</div>
           <div onClick={resetValue} className='cursor-pointer'>x</div>
       </div>
