@@ -1,12 +1,23 @@
 import React from 'react'
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Logo from '../assets/Saldo.png'
 import Sukses from '../assets/success.svg'
 import Gagal from '../assets/failed.png'
 
-function Modal({setIsModalOpen, value, type = "topup"}) {
+import { storeOrder, storeTopup } from '../redux/slices/transactionSlice'
+
+function Modal({setIsModalOpen, value, type}) {
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState(null)
+  const dispatch = useDispatch()
+
+  const order = useSelector((state) => state.transaction.order)
+  const name = order?.name || '';
+  const price = value;
+  const date = order?.date || '';
+  const time = order?.time || '';
+  const amount = value;
 
   const handleConfirm = () => {
     setIsLoading(true)
@@ -15,6 +26,12 @@ function Modal({setIsModalOpen, value, type = "topup"}) {
       const isSuccess = Math.random() > 0.5 // success-failure probability 50% 
       setIsLoading(false)
       setStatus(isSuccess ? 'Sukses' : 'Gagal')
+      
+      if (isSuccess && type === "transaction") {
+        dispatch(storeOrder({name, price, date, time}))
+      } else if (isSuccess && type === "topup") {
+        dispatch(storeTopup({amount, date, time}))
+      }
     }, 2000)
   }
 
@@ -27,7 +44,7 @@ function Modal({setIsModalOpen, value, type = "topup"}) {
         ) : status === 'Sukses' || status === 'Gagal' ? (
           <div className='flex flex-col items-center text-center'>
             <img src={status === 'Sukses' ? Sukses : Gagal} alt={status} className='mb-3 w-[40px] h-[40px]' />
-            <div className='text-xs font-semibold'>{type === "topup" ? "Top up sebesar" : `Pembayaran {nama} sebesar`}</div>
+            <div className='text-xs font-semibold'>{type === "topup" ? "Top up sebesar" : `Pembayaran ${name} sebesar`}</div>
             <div className='font-bold my-2'>Rp{value}</div>
             <div className='text-xs font-semibold'>{status}</div>
             <button 
@@ -40,7 +57,7 @@ function Modal({setIsModalOpen, value, type = "topup"}) {
         ) : (
           <div className='flex flex-col items-center text-center'>
             <img src={Logo} alt="Topup" className='mb-3 w-[40px] h-[40px]' />
-            <div className='text-xs font-semibold'>{type === "topup" ? "Anda yakin untuk top up sebesar" : `Beli {nama} senilai`}</div>
+            <div className='text-xs font-semibold'>{type === "topup" ? "Anda yakin untuk top up sebesar" : `Beli ${name} senilai`}</div>
             <div className='font-bold my-2'>Rp{value}?</div>
             <div className='flex flex-col justify-between items-center mt-2'>
               <button 
