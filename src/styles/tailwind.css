@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@theme {
+    --color-base: rgba(250, 250, 255, 1);
+    --color-primary: rgba(240,60,46,1);
+    --color-secondary: rgba(198,192,192,1);
+    --color-tertiary: rgba(100, 200, 180, 1);
+    --main-font-color: rgba(30, 30, 40, 1);
+}
+
+@layer base {
+    :root {
+        background-color: var(--color-base);
+        font-family: 'Open Sans', 'sans-serif';
+        color: var(--main-font-color);
+        margin: 0;
+        padding: 0;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .loader {
+      width: 50px;
+      --b: 8px; 
+      aspect-ratio: 1;
+      border-radius: 50%;
+      padding: 1px;
+      background: conic-gradient(#0000 10%,#f03c2e) content-box;
+      -webkit-mask:
+        repeating-conic-gradient(#0000 0deg,#000 1deg 20deg,#0000 21deg 36deg),
+        radial-gradient(farthest-side,#0000 calc(100% - var(--b) - 1px),#000 calc(100% - var(--b)));
+      -webkit-mask-composite: destination-in;
+        mask-composite: intersect;
+      animation:l4 1s infinite steps(10);
+    }
+    @keyframes l4 {to{transform: rotate(1turn)}}
+    }
+
+@layer components {
+    .nav {
+        @apply font-semibold text-sm cursor-pointer
+    }
+    .input-readonly {
+        @apply border-none outline-none
+    }
+    .banner {
+        @apply transition-transform duration-300 hover:scale-105 cursor-pointer
+    }
+    .label {
+        @apply text-xs font-semibold
+    }
+    .input {
+        @apply rounded-sm border border-(--color-secondary) text-(--main-font-color) text-xs
+    }
+    .button {
+        @apply bg-(--color-primary) rounded-sm border-(--color-primary) p-3 text-xs text-(--color-base) transition-transform duration-300 hover:scale-105 disabled:bg-(--color-secondary) cursor-pointer
+    }
+    .error-msg {
+        @apply text-xs text-(--color-primary)
+    }
+    .history {
+        @apply flex flex-row justify-between items-center border-t border-b border-(--color-secondary) py-2 px-1
+    }
+    .status-msg {
+        @apply flex flex-row justify-between items-center mt-2 py-2 px-5 bg-[#fff5f3] text-(--color-primary) text-xs
+    }
+}
