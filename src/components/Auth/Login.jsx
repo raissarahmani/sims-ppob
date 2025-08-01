@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useSelector } from 'react-redux'
-// import { login } from '../../redux/slices/authSlice'
+
 import EmailIcon from '../../assets/email.svg'
 import PassIcon from '../../assets/pass.svg'
 import SeeIcon from '../../assets/eye.svg'
@@ -21,7 +21,6 @@ function Login() {
   const navigate = useNavigate()
 
   const registeredUser = useSelector((state) => state.auth.user)
-  // const dispatch = useDispatch()
 
   const loginValid = (e) => {
     e.preventDefault()

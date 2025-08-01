@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
-import { register } from '../../redux/slices/authSlice'
+import { storeUserInfo } from '../../redux/slices/authSlice'
 
 import EmailIcon from '../../assets/email.svg'
 import User from '../../assets/user.svg'
@@ -98,7 +98,7 @@ function Regist() {
       setMsg('Registrasi sukses. Silahkan login')
     }
 
-    dispatch(register({
+    dispatch(storeUserInfo({
         user: { email, firstname, lastname, pass }
       }))
 
