@@ -102,6 +102,7 @@ function Regist() {
         user: { email, firstname, lastname, pass }
       }))
 
+    // API integration
     // fetch(`${apiUrl}/registration`, {
     //   method: 'POST',
     //   headers: {
@@ -115,7 +116,7 @@ function Regist() {
     //     throw new Error(data.msg || 'Registrasi gagal')
     //   }
 
-    //   dispatch(register({
+    //   dispatch(storeUserInfo({
     //     user: { email, firstname, lastname }
     //   }))
     // })
@@ -225,7 +226,7 @@ function Regist() {
         <div className='text-xs text-center text-[#c6c0c0] font-semibold'>Sudah punya akun? Login <span onClick={() => navigate('/login')} className='text-[#f03c2e] font-bold cursor-pointer'>di sini</span></div>
       </div>
       <div 
-        className={`status-msg ${isMsgVisible ? "visible" : "invisible"} ${registeredUser.email !== email ? "text-[#64c8b4]" : "text-[#f03c2e]"}`}>
+        className={`status-msg ${isMsgVisible ? "visible" : "invisible"}`}>
           <div>{msg}</div>
           <div onClick={resetValue} className='cursor-pointer'>x</div>
       </div>

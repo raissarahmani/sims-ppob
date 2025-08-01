@@ -2,6 +2,8 @@ import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useSelector } from 'react-redux'
+// import { useDispatch } from 'react-redux'
+// import { storeToken } from '../../redux/slices/authSlice'
 
 import EmailIcon from '../../assets/email.svg'
 import PassIcon from '../../assets/pass.svg'
@@ -21,6 +23,7 @@ function Login() {
   const navigate = useNavigate()
 
   const registeredUser = useSelector((state) => state.auth.user)
+  // const dispatch = useDispatch()
 
   const loginValid = (e) => {
     e.preventDefault()
@@ -57,7 +60,8 @@ function Login() {
     }
 
     navigate('/')
-
+    
+    // API integration
     // fetch(`${apiUrl}/login`, {
     //   method: 'POST',
     //   headers: {
@@ -72,7 +76,7 @@ function Login() {
     //   }
 
     //   const token = data.token
-    //   dispatch(login({
+    //   dispatch(storeToken({
     //     token,
     //   }))
     //   navigate('/')
