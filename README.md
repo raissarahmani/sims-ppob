@@ -40,18 +40,22 @@ A simple and intuitive e-wallet payment web application built with **React**, fe
 ---
 
 ## 📁 Folder Structure
-src/
-├── assets/  (Static images/icons)
-├── components/  (Shared UI components)
-├── pages/  (Route-level pages)
-├── redux/
-│ └── slices/  (Redux slices)
-├── data/  (Local mock JSONs)
-├── Router.jsx
-└── main.jsx
+src/ <br />
+├── assets/  (Static images/icons) <br />
+├── components/  (Shared UI components) <br />
+├── pages/  (Route-level pages) <br />
+├── redux/ <br />
+│ └── slices/  (Redux slices) <br />
+├── data/  (Local mock JSONs) <br />
+├── Router.jsx <br />
+└── main.jsx <br />
 
 ## 📸 Preview
-![Home](public/preview/home.png)
-![Login Page](public/preview/login.png)
-![Top Up Page](public/preview/topup.png)
+### Home
+![Home](public/preview/home.png) <br />
+### Login Page
+![Login Page](public/preview/login.png) <br />
+### Top Up Page
+![Top Up Page](public/preview/topup.png) <br />
+### Transaction History
 ![Transaction History](public/preview/history.png)
