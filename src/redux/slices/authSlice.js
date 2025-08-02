@@ -11,9 +11,9 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         storeUserInfo: (state, action) => {
-            const {email, firstname, lastname, pass} = action.payload.user
+            const {email, firstname, lastname} = action.payload.user
 
-            state.user = { email, firstname, lastname, pass }
+            state.user = { email, firstname, lastname }
             state.error = null
         },
         storeToken: (state, action) => {        

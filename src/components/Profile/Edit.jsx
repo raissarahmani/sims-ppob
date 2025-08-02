@@ -8,13 +8,12 @@ import EmailIcon from '../../assets/email.svg'
 import User from '../../assets/user.svg'
 import Defaultpic from '../../assets/default.png'
 
-// const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 function Edit() {
-    const userInfo = useSelector((state) => state.auth.user)
-    const email = userInfo.email
-    const firstname = userInfo.firstname
-    const lastname = userInfo.lastname
+    const [email, setEmail] = useState('')
+    const [firstname, setFirstname] = useState('')
+    const [lastname, setLastname] = useState('')
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
@@ -25,19 +24,34 @@ function Edit() {
     const [emailMsg, setEmailMsg] = useState('')
     const [firstnameMsg, setFirstnameMsg] = useState('')
     const [lastnameMsg, setLastnameMsg] = useState('')
+    const [successMsg, setSuccessMsg] = useState('')
     const [isEmailMsgVisible, setIsEmailMsgVisible] = useState(false)
     const [isFirstnameMsgVisible, setIsFirstnameMsgVisible] = useState(false)
     const [isLastnameMsgVisible, setIsLastnameMsgVisible] = useState(false)
+    const [isSuccessMsgVisible, setIsSuccessMsgVisible] = useState(false)
 
-    const [isUpdated, setIsUpdated] = useState(false)
-
+    const token = useSelector((state) => state.auth.token)
     useEffect(() => {
-      if (userInfo && !isUpdated) {
-        setNewEmail(userInfo.email || '');
-        setNewFirstname(userInfo.firstname || '');
-        setNewLastname(userInfo.lastname || '');
-      }
-    }, [userInfo, isUpdated])
+      if (!token) return ('Silahkan login terlebih dahulu')
+
+      fetch(`${apiUrl}/profile`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+        .then(async (res) => {
+          const data = await res.json()
+          if (!res.ok) throw new Error(data.message || 'Gagal mengambil profil')
+
+          setEmail(data.data.email)
+          setFirstname(data.data.first_name)
+          setLastname(data.data.last_name)
+          setSuccessMsg('')
+        })
+        .catch((err) => setSuccessMsg(err.message))
+    }, [token])
 
     const updateProfile = (e) => {
       e.preventDefault()
@@ -51,60 +65,58 @@ function Edit() {
       } else if (!newLastname) {
         setIsLastnameMsgVisible(true)
         setLastnameMsg("Last name should be filled")
-      } else if (!newEmail.includes('@')) {
-        setIsEmailMsgVisible(true)
-        setEmailMsg ("Email not valid")
+        return
       } else {
         setIsEmailMsgVisible(false)
         setIsFirstnameMsgVisible(false)
         setIsLastnameMsgVisible(false)
       }
 
-      dispatch(storeUserInfo({
-          user: { 
-            email: newEmail, 
-            firstname: newFirstname, 
-            lastname: newLastname 
-          }
-        }))
+      fetch(`${apiUrl}/profile/update`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          email: newEmail,
+          first_name: newFirstname,
+          last_name: newLastname,
+        }),
+      })
+        .then(async (res) => {
+          const data = await res.json()
+          if (!res.ok) throw new Error(data.message || 'Update profil gagal')
+          
+          setEmail(newEmail)
+          setFirstname(newFirstname)
+          setLastname(newLastname)
+          setSuccessMsg('Profil berhasil diperbarui')
+          setIsSuccessMsgVisible(true)
 
-    //   API Integration
-    //   fetch(`${apiUrl}/profile/update`, {
-    //     method: 'PUT',
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify({
-    //       email: newEmail,
-    //       firstname: newFirstname,
-    //       lastname: newLastname,
-    //     }),
-    //   })
-    //   .then(async (res) => {
-    //     const data = await res.json()
-    //     if (!res.ok) {
-    //       throw new Error(data.msg || 'Failed to register')
-    //     }
+          dispatch(storeUserInfo({
+            user: { 
+              email: newEmail, 
+              firstname: newFirstname, 
+              lastname: newLastname 
+            }
+          }))
 
-    //     dispatch(storeUserInfo({
-    //       user: { 
-    //         email: newEmail, 
-    //         firstname: newFirstname, 
-    //         lastname: newLastname 
-    //       }
-    //     }))
-    //   })
-    //   .catch((err) => {
-    //     console.error(err)
-    //     alert(err.message)
-    //   })
-
-      setIsUpdated(true)
-      navigate('/profile')
+          setTimeout(() => {
+            navigate('/profile')
+          }, 3000)
+        })
+        .catch((err) => setSuccessMsg(err.message))
     }
 
+    const resetValue = () => {
+    setIsSuccessMsgVisible(false)
+    setSuccessMsg('')
+  }
+
   return (
-    <div>
+    <div className='flex flex-col gap-10'>
+      <div>
         <div className='flex flex-col items-center rounded-full mb-3'>
           <img src={Defaultpic} alt="profile picture" className='object-cover' />
         </div>
@@ -163,6 +175,12 @@ function Edit() {
             </button>
           </div>
         </form>
+      </div>
+      <div 
+        className={`status-msg ${isSuccessMsgVisible ? "visible" : "invisible"}`}>
+          <div>{successMsg}</div>
+          <div onClick={resetValue} className='cursor-pointer'>x</div>
+      </div>
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import React from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout } from '../../redux/slices/authSlice'
@@ -7,34 +8,43 @@ import EmailIcon from '../../assets/email.svg'
 import User from '../../assets/user.svg'
 import Defaultpic from '../../assets/default.png'
 
-// const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 function Profile() {
-  const userInfo = useSelector((state) => state.auth.user)
-  const email = userInfo.email
-  const firstname = userInfo.firstname
-  const lastname = userInfo.lastname
+  const [email, setEmail] = useState('')
+  const [firstname, setFirstname] = useState('')
+  const [lastname, setLastname] = useState('')
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  // API integration
-  // fetch(`${apiUrl}/profile`, {
-  //     method: 'GET',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({ email, firstname, lastname })
-  //   })
-  //   .then(async (res) => {
-  //     const data = await res.json()
-  //     if (!res.ok) {
-  //       throw new Error(data.msg || 'Gagal menampilkan profil')
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     console.error(err)
-  //     alert(err.message)
-  //   })
+  const token = useSelector((state) => state.auth.token)
+  useEffect(() => {
+    if (!token) return ('Silahkan login terlebih dahulu')
+
+    fetch(`${apiUrl}/profile`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    .then(async (res) => {
+      const data = await res.json()
+      console.log("Profile response:", data)
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Gagal menampilkan profil')
+      }
+
+      setEmail(data.data.email)
+      setFirstname(data.data.first_name)
+      setLastname(data.data.last_name)
+    })
+    .catch((err) => {
+      console.error(err)
+      alert(err.message)
+    })
+  }, [token])
 
   const handleLogout = () => {
       dispatch(logout())

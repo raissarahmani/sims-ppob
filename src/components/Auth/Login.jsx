@@ -1,16 +1,16 @@
 import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
-import { useSelector } from 'react-redux'
-// import { useDispatch } from 'react-redux'
-// import { storeToken } from '../../redux/slices/authSlice'
+// import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { storeToken } from '../../redux/slices/authSlice'
 
 import EmailIcon from '../../assets/email.svg'
 import PassIcon from '../../assets/pass.svg'
 import SeeIcon from '../../assets/eye.svg'
 import HideIcon from '../../assets/eye2.svg'
 
-// const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 function Login() {
   const [email, setEmail] = useState('')
@@ -18,12 +18,14 @@ function Login() {
   const [isPassVisible, setIsPassVisible] = useState(false)
   const [emailMsg, setEmailMsg] = useState('')
   const [passMsg, setPassMsg] = useState('')
+  const [msg, setMsg] = useState('')
   const [isEmailMsgVisible, setIsEmailMsgVisible] = useState(false)
   const [isPassMsgVisible, setIsPassMsgVisible] = useState(false)
+  const [isMsgVisible, setIsMsgVisible] = useState(false)
   const navigate = useNavigate()
 
-  const registeredUser = useSelector((state) => state.auth.user)
-  // const dispatch = useDispatch()
+  // const registeredUser = useSelector((state) => state.auth.user)
+  const dispatch = useDispatch()
 
   const loginValid = (e) => {
     e.preventDefault()
@@ -41,60 +43,67 @@ function Login() {
     if (!pass) {
       setIsPassMsgVisible(true)
       setPassMsg("Password harus diisi")
+      return
     } else if (pass.length < 8) {
       setIsPassMsgVisible(true)
       setPassMsg("Password minimal 8 karakter")
-    } setIsPassMsgVisible(false)
+      return
+    } else {
+      setIsPassMsgVisible(false)
+    }
 
     // demo only: checking email and password from redux store
-    if (registeredUser?.email !== email) {
-      setIsEmailMsgVisible(true)
-      setEmailMsg("Email belum terdaftar. Silahkan registrasi")
-      return
-    }
+    // if (registeredUser?.email !== email) {
+    //   setIsEmailMsgVisible(true)
+    //   setEmailMsg("Email belum terdaftar. Silahkan registrasi")
+    //   return
+    // }
 
-    if (registeredUser?.pass !== pass) {
-      setIsPassMsgVisible(true)
-      setPassMsg("Password salah")
-      return
-    }
-
-    navigate('/')
+    // if (registeredUser?.pass !== pass) {
+    //   setIsPassMsgVisible(true)
+    //   setPassMsg("Password salah")
+    //   return
+    // }
     
     // API integration
-    // fetch(`${apiUrl}/login`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({ email, pass })
-    // })
-    // .then(async (res) => {
-    //   const data = await res.json()
-    //   if (!res.ok) {
-    //     throw new Error(data.msg || 'Login gagal')
-    //   }
+    fetch(`${apiUrl}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email, password: pass })
+    })
+    .then(async (res) => {
+      const data = await res.json()
+      console.log("Login response:", data)
+      if (!res.ok) {
+        throw new Error(data.msg || 'Login gagal')
+      }
 
-    //   const token = data.token
-    //   dispatch(storeToken({
-    //     token,
-    //   }))
-    //   navigate('/')
-    // })
-    // .catch((err) => {
-    //   console.error(err)
-    //   alert(err.message)
-    // })
+      const token = data.data.token
+      dispatch(storeToken({
+        token,
+      }))
 
-    setEmail('')
-    setPass('')
+      navigate('/')
+      setEmail('')
+      setPass('')
+      setMsg('')
+    })
+    .catch((err) => {
+      console.error(err)
+      setMsg(err.message)
+      setIsMsgVisible(true)
+    })
   }
 
   const resetValue = () => {
     setIsEmailMsgVisible(false)
     setIsPassMsgVisible(false)
+    setIsMsgVisible(false)
     setEmailMsg('')
     setPassMsg('')
+    setMsg('')
   }
 
   return (
@@ -140,8 +149,8 @@ function Login() {
         <div className='text-xs text-center text-[#c6c0c0] font-semibold'>Belum punya akun? Registrasi <span onClick={() => navigate('/registration')} className='text-[#f03c2e] font-bold cursor-pointer'>di sini</span></div>
       </div>
       <div 
-        className={`status-msg ${isEmailMsgVisible || isPassMsgVisible ? "visible" : "invisible"}`}>
-          <div>{emailMsg || passMsg}</div>
+        className={`status-msg ${isEmailMsgVisible || isPassMsgVisible || isMsgVisible ? "visible" : "invisible"}`}>
+          <div>{emailMsg || passMsg || msg}</div>
           <div onClick={resetValue} className='cursor-pointer'>x</div>
       </div>
     </div>

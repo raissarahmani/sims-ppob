@@ -1,7 +1,8 @@
 import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+// import { useSelector } from 'react-redux'
 import { storeUserInfo } from '../../redux/slices/authSlice'
 
 import EmailIcon from '../../assets/email.svg'
@@ -10,7 +11,7 @@ import PassIcon from '../../assets/pass.svg'
 import SeeIcon from '../../assets/eye.svg'
 import HideIcon from '../../assets/eye2.svg'
 
-// const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = import.meta.env.VITE_API_URL;
 
 function Regist() {
   const [email, setEmail] = useState('')
@@ -35,7 +36,7 @@ function Regist() {
   const [isConfirmPassMsgVisible, setIsConfirmPassMsgVisible] = useState(false)
   const [isMsgVisible, setIsMsgVisible] = useState(false)
 
-  const registeredUser = useSelector((state) => state.auth.user)
+  // const registeredUser = useSelector((state) => state.auth.user)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -89,41 +90,52 @@ function Regist() {
     }
 
     // demo only: checking email from redux store
-    if (registeredUser?.email === email) {
-      setIsMsgVisible(true)
-      setMsg("Email sudah terdaftar. Silahkan login")
-      return
-    } else {
-      setIsMsgVisible(true)
-      setMsg('Registrasi sukses. Silahkan login')
-    }
-
-    dispatch(storeUserInfo({
-        user: { email, firstname, lastname, pass }
-      }))
+    // if (registeredUser?.email === email) {
+    //   setIsMsgVisible(true)
+    //   setMsg("Email sudah terdaftar. Silahkan login")
+    //   return
+    // } else {
+    //   setIsMsgVisible(true)
+    //   setMsg('Registrasi sukses. Silahkan login')
+    // }
 
     // API integration
-    // fetch(`${apiUrl}/registration`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({ email, firstname, lastname, pass })
-    // })
-    // .then(async (res) => {
-    //   const data = await res.json()
-    //   if (!res.ok) {
-    //     throw new Error(data.msg || 'Registrasi gagal')
-    //   }
+    fetch(`${apiUrl}/registration`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ 
+        email, 
+        first_name: firstname,
+        last_name: lastname,
+        password: pass 
+      })
+    })
+    .then(async (res) => {
+      console.log("Status code:", res.status)
+      const data = await res.json()
+      console.log("Regist response:", data)
+      if (!res.ok) {
+        throw new Error(data.msg || 'Registrasi gagal')
+      }
 
-    //   dispatch(storeUserInfo({
-    //     user: { email, firstname, lastname }
-    //   }))
-    // })
-    // .catch((err) => {
-    //   console.error(err)
-    //   alert(err.message)
-    // })
+      dispatch(storeUserInfo({
+        user: { 
+          email: data.email, 
+          firstname: data.first_name, 
+          lastname: data.last_name 
+        }
+      }))
+
+      setMsg('Registrasi berhasil. Silahkan login')
+      setIsMsgVisible(true)
+    })
+    .catch((err) => {
+      console.error(err)
+      setMsg(err.message)
+      setIsMsgVisible(true)
+    })
 
     setEmail('')
     setFirstname('')
