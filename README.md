@@ -1,12 +1,57 @@
-# React + Vite
+# 💳 SIMS PPOB Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple and intuitive e-wallet payment web application built with **React**, featuring top-up functionality, service transactions, promo displays, user profile management, and transaction history.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
 
-## Expanding the ESLint configuration
+- 🔐 **Authentication**
+  - Login and registration flow
+  - Token-based authorization
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- 💰 **Balance Management**
+  - Top up your balance
+  - Real-time balance updates after transactions
+
+- 🧾 **Transaction System**
+  - Pay for various services
+  - View transaction history
+
+- 🧍 **User Profile**
+  - View and update profile details
+  - Change profile picture
+
+- 🏷️ **Promotions**
+  - Scrollable banner section for available promos
+
+---
+
+## 🛠️ Tech Stack
+
+- **React** (UI library)
+- **Redux Toolkit** (State management)
+- **React Router** (Routing and navigation)
+- **Tailwind CSS** (utility-first styling)
+- **Vite** (Lightning-fast development server)
+- Integration with REST API
+- JWT Token for secure authentication
+
+---
+
+## 📁 Folder Structure
+src/
+├── assets/  (Static images/icons)
+├── components/  (Shared UI components)
+├── pages/  (Route-level pages)
+├── redux/
+│ └── slices/  (Redux slices)
+├── data/  (Local mock JSONs)
+├── Router.jsx
+└── main.jsx
+
+## 📸 Preview
+![Home](public/preview/home.png)
+![Login Page](public/preview/login.png)
+![Top Up Page](public/preview/topup.png)
+![Transaction History](public/preview/history.png)
