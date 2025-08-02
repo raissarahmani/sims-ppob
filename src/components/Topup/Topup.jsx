@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Modal from '../Modal'
 import Money from '../../assets/money.svg'
 
@@ -37,6 +37,8 @@ function Topup() {
       topup()
     }
   }
+
+  const token = useSelector((state) => state.auth.token)
 
   const topup = () => {
       const now = new Date()
@@ -92,7 +94,7 @@ function Topup() {
       </form>
       {isModalOpen && (
         <div className='fixed inset-0 bg-[#00000099] flex justify-center items-center z-3'>
-            <Modal setIsModalOpen={setIsModalOpen} value={amount} type="topup" />
+            <Modal setIsModalOpen={setIsModalOpen} value={amount} type="topup" token={token} />
         </div>
       )}
     </div>

@@ -5,7 +5,7 @@ import Bg from '../../assets/BackgroundSaldo.png'
   
 function Balance() {
   const [showBalance, setShowBalance] = useState(false)
-  const balance = useSelector((state) => state.transaction.balance) ?? 0
+  const balance = useSelector((state) => state.transaction.balance)
   const nominalBalance = () => {
     setShowBalance((showBalance) => !showBalance)
   }

@@ -17,14 +17,14 @@ const transactionSlice = createSlice({
           state.order = action.payload;
         },
         storeOrder: (state, action) => {
-          const { name, price, image, date, time } = action.payload
-          state.balance -= price
+          const { name, price, image, balance, date, time } = action.payload
+          state.balance = balance
           state.transaction.unshift({ name, price, image, date, time })
           state.order = action.payload
         },
         storeTopup: (state, action) => {
-          const { amount, date, time } = action.payload;
-          state.balance += amount;
+          const { amount, balance, date, time } = action.payload;
+          state.balance = balance
           state.transaction.unshift({ name: "Top-up", price: amount, date, time })
           state.order = action.payload
         }

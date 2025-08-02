@@ -4,34 +4,91 @@ import { useDispatch, useSelector } from 'react-redux'
 import Logo from '../assets/Saldo.png'
 import Sukses from '../assets/success.svg'
 import Gagal from '../assets/failed.png'
-
 import { storeOrder, storeTopup } from '../redux/slices/transactionSlice'
 
-function Modal({setIsModalOpen, value, type}) {
+const apiUrl = import.meta.env.VITE_API_URL
+
+function Modal({setIsModalOpen, value, type, token}) {
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState(null)
   const dispatch = useDispatch()
 
   const order = useSelector((state) => state.transaction.order)
   const name = order?.name || '';
-  const price = value;
   const date = order?.date || '';
   const time = order?.time || '';
-  const amount = value;
 
   const handleConfirm = () => {
     setIsLoading(true)
     setStatus(null)
+
+    if (type === 'topup') {
+      fetch(`${apiUrl}/topup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ top_up_amount: value }),
+      })
+        .then(async (res) => {
+          const data = await res.json()
+          console.log("Top up response:", data)
+
+          if (!res.ok) {
+            throw new Error(data.message || 'Top up gagal')
+          }
+
+          setStatus("Sukses")
+          setTimeout(() => {
+            dispatch(storeTopup({ 
+              amount: value, 
+              balance: data.data.balance,
+              date, 
+              time 
+            }))
+          }, 2000)
+        })
+        .catch((err) => {
+          console.error(err)
+          setStatus("Gagal")
+        })
+    } else if (type === 'transaction') {
+        fetch(`${apiUrl}/transaction`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ service_code: order.name }),
+        })
+          .then(async (res) => {
+            const data = await res.json()
+            console.log("Transaction response:", data)
+          
+            if (!res.ok) {
+              throw new Error(data.message || 'Transaksi gagal')
+            }
+
+              setStatus("Sukses")
+              setTimeout(() => {
+                dispatch(storeOrder({
+                  name: data.data.service_name,
+                  price: value,
+                  date,
+                  time,
+                }))
+              }, 2000)
+            })
+            .catch((err) => {
+              console.error(err)
+              setStatus("Gagal")
+            })
+    }
+
     setTimeout(() => {
-      const isSuccess = Math.random() > 0.5 // success-failure probability 50% 
-      setIsLoading(false)
-      setStatus(isSuccess ? 'Sukses' : 'Gagal')
-      
-      if (isSuccess && type === "transaction") {
-        dispatch(storeOrder({name, price, date, time}))
-      } else if (isSuccess && type === "topup") {
-        dispatch(storeTopup({amount, date, time}))
-      }
+      setIsLoading(false)      
+      if (status !== "Sukses") return
     }, 2000)
   }
 
