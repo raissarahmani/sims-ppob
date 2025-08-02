@@ -103,39 +103,46 @@ function Regist() {
     fetch(`${apiUrl}/registration`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ 
         email, 
         first_name: firstname,
         last_name: lastname,
-        password: pass 
-      })
+        password: pass,
+      }),
     })
-    .then(async (res) => {
-      console.log("Status code:", res.status)
-      const data = await res.json()
-      console.log("Regist response:", data)
-      if (!res.ok) {
-        throw new Error(data.msg || 'Registrasi gagal')
-      }
-
-      dispatch(storeUserInfo({
-        user: { 
-          email: data.email, 
-          firstname: data.first_name, 
-          lastname: data.last_name 
+      .then(async (res) => {
+        const text = await res.text();
+        let data;
+      
+        try {
+          data = JSON.parse(text);
+        } catch (err) {
+          throw err ('Server returned non-JSON: ' + text);
         }
-      }))
+      
+        if (!res.ok) {
+          throw new Error(data.message || 'Registrasi gagal');
+        }
+      
+        dispatch(storeUserInfo({
+          user: { 
+            email: data.email, 
+            firstname: data.first_name, 
+            lastname: data.last_name 
+          }
+        }));
 
-      setMsg('Registrasi berhasil. Silahkan login')
-      setIsMsgVisible(true)
-    })
-    .catch((err) => {
-      console.error(err)
-      setMsg(err.message)
-      setIsMsgVisible(true)
-    })
+    setMsg('Registrasi berhasil. Silahkan login');
+    setIsMsgVisible(true);
+  })
+  .catch((err) => {
+    console.error(err);
+    setMsg(err.message);
+    setIsMsgVisible(true);
+  });
+
 
     setEmail('')
     setFirstname('')
