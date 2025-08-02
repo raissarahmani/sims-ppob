@@ -1,14 +1,19 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import Bg from '../../assets/BackgroundSaldo.png'
   
 function Balance() {
+  const [balance, setBalance] = useState(0)
   const [showBalance, setShowBalance] = useState(false)
-  const balance = useSelector((state) => state.transaction.balance)
+  const updateBalance = useSelector((state) => state.transaction.balance)
   const nominalBalance = () => {
     setShowBalance((showBalance) => !showBalance)
   }
+
+  useEffect(() => {
+    setBalance(updateBalance)
+  }, [updateBalance])
 
   return (
     <div 

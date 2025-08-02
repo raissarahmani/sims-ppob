@@ -48,7 +48,7 @@ function Profile() {
 
   const handleLogout = () => {
       dispatch(logout())
-      navigate("/")
+      navigate("/login")
   }
   
   return (

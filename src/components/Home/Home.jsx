@@ -20,7 +20,13 @@ function Home() {
   const navigate = useNavigate()
 
   const chooseService = (service) => {
-    dispatch(selectService(service))
+    dispatch(selectService({
+      service_code: service.service_code,
+      name: service.service_name,
+      image: service.service_icon,
+      price: service.service_tariff
+    }))
+    console.log(service)
     navigate("/transaction")
   }
 
@@ -49,9 +55,9 @@ function Home() {
   return (
     <div className='px-30 py-5'>
       <div className='flex flex-row justify-between items-center my-5'>
-        {ServiceList.map((service) => (
-          <div key={service.id} onClick={() => chooseService(service)}>
-            <Service image={getImage(service.image)} name={service.name} />
+        {ServiceList.map((service, i) => (
+          <div key={i} onClick={() => chooseService(service)}>
+            <Service image={getImage(service.service_icon)} name={service.service_name} />
           </div>
         ))}
       </div>
@@ -64,8 +70,8 @@ function Home() {
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseLeave}
       >
-        {BannerList.map((banner) => (
-          <Banner key={banner.id} src={banner.image} alt={banner.name} />
+        {BannerList.map((banner, i) => (
+          <Banner key={i} src={banner.banner_image} alt={banner.banner_name} />
         ))}
       </div>
     </div>

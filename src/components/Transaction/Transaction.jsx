@@ -1,21 +1,35 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
-import Listrik from '../../assets/Listrik.png'
+import { useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import Modal from '../Modal'
 import Money from '../../assets/money.svg'
 
-function Transaction() {
-  const [value, setValue] = useState(0)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+import { selectService } from '../../redux/slices/transactionSlice'
 
-  useEffect(() => {
-    setTimeout(() => {
-      setValue(125000) // example
-    }, 1000)
-  }, [])
+const images = import.meta.glob('../../assets/*.png', { eager: true })
+function getImage(filename) {
+  return images[`../../assets/${filename}`]?.default
+}
+
+function Transaction() {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const dispatch = useDispatch()
+
+  const token = useSelector((state) => state.auth.token)
+
+  const service = useSelector((state) => state.transaction.order)
+  const service_code = service?.service_code || '';
+  const name = service?.name || '';
+  const price = service?.price || 0;
+  const image = service?.image || '';
 
   const payBills = (e) => {
     e.preventDefault()
+    const now = new Date()
+    const date = now.toLocaleDateString("id-ID")
+    const time = now.toLocaleTimeString("id-ID")
+
+    dispatch(selectService({ service_code, name, price, image, date, time }))
     setIsModalOpen(true)
   }
 
@@ -23,8 +37,8 @@ function Transaction() {
     <div className='relative px-30 py-5'>
       <div className='mt-5 mb-2 text-sm font-semibold'>Pembayaran</div>
       <div className='flex flex-row items-center gap-2'>
-        <img src={Listrik} alt="Listrik" className='w-[20px] h-[20px]' />
-        <div className='text-sm font-bold'>Listrik</div>
+        <img src={getImage(image)} alt={name} className='w-[20px] h-[20px]' />
+        <div className='text-sm font-bold'>{name}</div>
       </div>
       <form onSubmit={payBills} className='flex flex-col gap-2 my-10'>
         <label htmlFor="transaction" hidden ></label>
@@ -33,7 +47,7 @@ function Transaction() {
           <input 
             type="number" 
             name="transaction" 
-            value={value} 
+            value={price} 
             readOnly
             className='border-none outline-none w-full'
           />
@@ -46,7 +60,7 @@ function Transaction() {
       </form>
       {isModalOpen && (
         <div className='fixed inset-0 bg-[#00000099] flex justify-center items-center z-3'>
-            <Modal setIsModalOpen={setIsModalOpen} value={value} type="transaction"/>
+            <Modal setIsModalOpen={setIsModalOpen} value={price} type="transaction" token={token}/>
         </div>
       )}
     </div>
