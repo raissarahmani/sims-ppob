@@ -20,27 +20,23 @@ import Edit from './components/Profile/Edit'
 function Router() {
   return (
     <Routes>
-        <Route path="/" element = {<Dashboard />}>
-            <Route index element = {<Home />} />
-            {/* <Route element={<PrivateRoute />}> */}
-              <Route path="topup" element = {<Topup />} />
-              <Route path="transaction" element = {<Transaction />} />
-              <Route path="transaction/history" element = {<History />} />
-              <Route path="transaction/all" element = {<ShowMore />} />
-            {/* </Route> */}
-        </Route> 
+      <Route element={<AuthPage />}>
+        <Route path="/" element={<Login />} />
+        <Route path="registration" element={<Regist />} />
+      </Route>
 
-        <Route element = {<AuthPage/>}>
-            <Route path="login" element= {<Login />} />
-            <Route path="registration" element = {<Regist />} />
-        </Route>
+      <Route path="/dashboard" element={<Dashboard />}>
+        <Route index element={<Home />} />
+        <Route path="topup" element={<Topup />} />
+        <Route path="transaction" element={<Transaction />} />
+        <Route path="transaction/history" element={<History />} />
+        <Route path="transaction/all" element={<ShowMore />} />
+      </Route>
 
-        {/* <Route element = {<PrivateRoute />} > */}
-            <Route element = {<ProfilePage/>}>
-                <Route path="profile" element= {<Profile />} />
-                <Route path="profile/update" element = {<Edit />} />
-            </Route>
-        {/* </Route> */}
+      <Route element={<ProfilePage />}>
+        <Route path="profile" element={<Profile />} />
+        <Route path="profile/update" element={<Edit />} />
+      </Route>
     </Routes>
   )
 }
