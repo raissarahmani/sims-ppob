@@ -1,6 +1,6 @@
 import React from 'react'
 import { Routes, Route } from 'react-router'
-// import PrivateRoute from './PrivateRoute'
+import PrivateRoute from './PrivateRoute'
 
 import Dashboard from './pages/Dashboard'
 import Home from './components/Home/Home'
@@ -22,12 +22,12 @@ function Router() {
     <Routes>
         <Route path="/" element = {<Dashboard />}>
             <Route index element = {<Home />} />
-            {/* <Route element={<PrivateRoute />}> */}
+            <Route element={<PrivateRoute />}>
               <Route path="topup" element = {<Topup />} />
               <Route path="transaction" element = {<Transaction />} />
               <Route path="transaction/history" element = {<History />} />
               <Route path="transaction/all" element = {<ShowMore />} />
-            {/* </Route> */}
+            </Route>
         </Route> 
 
         <Route element = {<AuthPage/>}>
@@ -35,12 +35,12 @@ function Router() {
             <Route path="registration" element = {<Regist />} />
         </Route>
 
-        {/* <Route element = {<PrivateRoute />} > */}
+        <Route element = {<PrivateRoute />} >
             <Route element = {<ProfilePage/>}>
                 <Route path="profile" element= {<Profile />} />
                 <Route path="profile/update" element = {<Edit />} />
             </Route>
-        {/* </Route> */}
+        </Route>
     </Routes>
   )
 }
