@@ -14,6 +14,8 @@ function Edit() {
     const [email, setEmail] = useState('')
     const [firstname, setFirstname] = useState('')
     const [lastname, setLastname] = useState('')
+    const [profilePic, setProfilePic] = useState(Defaultpic)
+    const [newImage, setNewImage] = useState(null)
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
@@ -48,10 +50,31 @@ function Edit() {
           setEmail(data.data.email)
           setFirstname(data.data.first_name)
           setLastname(data.data.last_name)
+          setProfilePic(data.data.profile_image || Defaultpic)
           setSuccessMsg('')
         })
         .catch((err) => setSuccessMsg(err.message))
     }, [token])
+
+    const handleImage = (e) => {
+      const pic = e.target.files[0]
+      if (!pic) return
+
+      const isValidType = ['image/png', 'image/jpeg'].includes(pic.type)
+      const isValidSize = pic.size <= 100 * 1024
+      if (!isValidType) {
+        alert("Hanya file PNG atau JPEG yang diperbolehkan.")
+        return
+      }
+    
+      if (!isValidSize) {
+        alert("Ukuran gambar tidak boleh lebih dari 100KB.")
+        return
+      }
+    
+      setNewImage(pic)
+      setProfilePic(URL.createObjectURL(pic)) 
+    }
 
     const updateProfile = (e) => {
       e.preventDefault()
@@ -88,6 +111,8 @@ function Edit() {
           const data = await res.json()
           if (!res.ok) throw new Error(data.message || 'Update profil gagal')
           
+          await uploadImage()
+
           setEmail(newEmail)
           setFirstname(newFirstname)
           setLastname(newLastname)
@@ -96,9 +121,10 @@ function Edit() {
 
           dispatch(storeUserInfo({
             user: { 
-              email: newEmail, 
-              firstname: newFirstname, 
-              lastname: newLastname 
+              email: newEmail || email, 
+              firstname: newFirstname || firstname, 
+              lastname: newLastname || lastname,
+              profile_image: `${apiUrl}/uploads/${data.data.profile_image}`
             }
           }))
 
@@ -107,6 +133,31 @@ function Edit() {
           }, 3000)
         })
         .catch((err) => setSuccessMsg(err.message))
+    }
+
+    const uploadImage = async () => {
+      if (!newImage) return
+
+      const formData = new FormData()
+      formData.append('image', newImage)
+
+      try {
+        const res = await fetch(`${apiUrl}/profile/image`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        })
+      
+        const data = await res.json()
+        if (!res.ok) throw new Error(data.message || "Upload foto gagal")
+        
+        setProfilePic(`${apiUrl}/uploads/${data.data.profile_image}`)
+        console.log('Image uploaded:', data)
+      } catch (err) {
+        console.error(err.message)
+      }
     }
 
     const resetValue = () => {
@@ -118,7 +169,16 @@ function Edit() {
     <div className='flex flex-col gap-10'>
       <div>
         <div className='flex flex-col items-center rounded-full mb-3'>
-          <img src={Defaultpic} alt="profile picture" className='object-cover' />
+          <label htmlFor="image-upload" className='text-xs mt-2 cursor-pointer text-[#f03c2e]'>
+            <img src={profilePic} alt={firstname} className='w-25 h-25 rounded-full object-cover' />
+          </label>
+          <input 
+            id="image-upload" 
+            type="file" 
+            accept="image/jpeg, image/png" 
+            onChange={handleImage} 
+            className='hidden'
+          />
         </div>
         <div className='font-bold text-2xl text-center'>{firstname} {lastname}</div>
         <form onSubmit={updateProfile} className='flex flex-col gap-2 mt-5'>

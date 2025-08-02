@@ -134,14 +134,14 @@ function Regist() {
           }
         }));
 
-    setMsg('Registrasi berhasil. Silahkan login');
-    setIsMsgVisible(true);
-  })
-  .catch((err) => {
-    console.error(err);
-    setMsg(err.message);
-    setIsMsgVisible(true);
-  });
+        setMsg('Registrasi berhasil. Silahkan login');
+        setIsMsgVisible(true);
+      })
+      .catch((err) => {
+        console.error(err);
+        setMsg(err.message);
+        setIsMsgVisible(true);
+      });
 
 
     setEmail('')
