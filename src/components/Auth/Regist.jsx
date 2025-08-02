@@ -119,7 +119,7 @@ function Regist() {
         try {
           data = JSON.parse(text);
         } catch (err) {
-          throw err ('Server returned non-JSON: ' + text);
+          throw new Error ('Server returned non-JSON: ' + text);
         }
       
         if (!res.ok) {
