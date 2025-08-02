@@ -1,74 +1,74 @@
 [
-    {
-        "id": 1,
-        "image": "PBB.png",
-        "name": "PBB",
-        "price": 500000
-    },
-    {
-        "id": 2,
-        "image": "Listrik.png",
-        "name": "Listrik",
-        "price": 500000
-    },
-    {
-        "id": 3,
-        "image": "Pulsa.png",
-        "name": "Pulsa",
-        "price": 20000
-    },
-    {
-        "id": 4,
-        "image": "PDAM.png",
-        "name": "PDAM",
-        "price": 100000
-    },
-    {
-        "id": 5,
-        "image": "PGN.png",
-        "name": "PGN",
-        "price": 200000
-    },
-    {
-        "id": 6,
-        "image": "Televisi.png",
-        "name": "TV Langganan",
-        "price": 100000
-    },
-    {
-        "id": 7,
-        "image": "Musik.png",
-        "name": "Musik",
-        "price": 50000
-    },
-    {
-        "id": 8,
-        "image": "Game.png",
-        "name": "Voucher Game",
-        "price": 700000
-    },
-    {
-        "id": 9,
-        "image": "VoucherMakanan.png",
-        "name": "Voucher Makanan",
-        "price": 200000
-    },
-    {
-        "id": 10,
-        "image": "Kurban.png",
-        "name": "Kurban",
-        "price": 1000000
-    },
-    {
-        "id": 11,
-        "image": "Zakat.png",
-        "name": "Zakat",
-        "price": 500000
-    },
-    {
-        "id": 12,
-        "image": "PaketData.png",
-        "name": "Paket Data",
-        "price": 100000
-    }
+  {
+    "service_code": "PAJAK",
+    "service_name": "PBB",
+    "service_icon": "PBB.png",
+    "service_tariff": 40000
+  },
+  {
+    "service_code": "PLN",
+    "service_name": "Listrik",
+    "service_icon": "Listrik.png",
+    "service_tariff": 10000
+  },
+  {
+    "service_code": "PULSA",
+    "service_name": "Pulsa",
+    "service_icon": "Pulsa.png",
+    "service_tariff": 40000
+  },
+  {
+    "service_code": "PDAM",
+    "service_name": "PDAM",
+    "service_icon": "PDAM.png",
+    "service_tariff": 50000
+  },
+  {
+    "service_code": "PGN",
+    "service_name": "PGN",
+    "service_icon": "PGN.png",
+    "service_tariff": 200000
+  },
+  {
+    "service_code": "TV",
+    "service_name": "TV Langganan",
+    "service_icon": "Televisi.png",
+    "service_tariff": 50000
+  },
+  {
+    "service_code": "MUSIK",
+    "service_name": "Musik",
+    "service_icon": "Musik.png",
+    "service_tariff": 50000
+  },
+  {
+    "service_code": "VOUCHER_GAME",
+    "service_name": "Voucher Game",
+    "service_icon": "Game.png",
+    "service_tariff": 100000
+  },
+  {
+    "service_code": "VOUCHER_MAKANAN",
+    "service_name": "Voucher Makanan",
+    "service_icon": "VoucherMakanan.png",
+    "service_tariff": 100000
+  },
+  {
+    "service_code": "QURBAN",
+    "service_name": "Kurban",
+    "service_icon": "Kurban.png",
+    "service_tariff": 200000
+  },
+  {
+    "service_code": "ZAKAT",
+    "service_name": "Zakat",
+    "service_icon": "Zakat.png",
+    "service_tariff": 300000
+  },
+  {
+    "service_code": "PAKET_DATA",
+    "service_name": "Paket Data",
+    "service_icon": "PaketData.png",
+    "service_tariff": 50000
+  }
 ]

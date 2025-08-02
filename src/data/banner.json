@@ -1,27 +1,27 @@
 [
-    {
-        "id": 1,
-        "image": "Banner1.png",
-        "name": "Saldo Gratis"
-    },
-    {
-        "id": 2,
-        "image": "Banner2.png",
-        "name": "Diskon Listrik"
-    },
-    {
-        "id": 3,
-        "image": "Banner3.png",
-        "name": "Promo Makan"
-    },
-    {
-        "id": 4,
-        "image": "Banner4.png",
-        "name": "Cashback 25%"
-    },
-    {
-        "id": 5,
-        "image": "Banner5.png",
-        "name": "Buy 1 Get 2"
-    }
+  {
+    "banner_name": "Banner 1",
+    "banner_image": "Banner1.png",
+    "description": "Saldo gratis untuk pengguna baru"
+  },
+  {
+    "banner_name": "Banner 2",
+    "banner_image": "Banner2.png",
+    "description": "Nikmati potongan harga untuk pembayaran listrik"
+  },
+  {
+    "banner_name": "Banner 3",
+    "banner_image": "Banner3.png",
+    "description": "Diskon spesial untuk makanan favoritmu"
+  },
+  {
+    "banner_name": "Banner 4",
+    "banner_image": "Banner4.png",
+    "description": "Dapatkan cashback 25% setiap transaksi"
+  },
+  {
+    "banner_name": "Banner 5",
+    "banner_image": "Banner5.png",
+    "description": "Beli 1 gratis 2 hanya untuk hari ini!"
+  }
 ]
