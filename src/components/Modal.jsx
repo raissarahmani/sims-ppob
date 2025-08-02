@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Logo from '../assets/Saldo.png'
 import Sukses from '../assets/success.svg'
 import Gagal from '../assets/failed.png'
-import { storeOrder, storeTopup } from '../redux/slices/transactionSlice'
+import { storeOrder, storeTopup, showBalance } from '../redux/slices/transactionSlice'
 
 const apiUrl = import.meta.env.VITE_API_URL
 
@@ -17,6 +17,7 @@ function Modal({setIsModalOpen, value, type, token}) {
   const name = order?.name || '';
   const date = order?.date || '';
   const time = order?.time || '';
+  console.log(order)
 
   const handleConfirm = () => {
     setIsLoading(true)
@@ -60,7 +61,7 @@ function Modal({setIsModalOpen, value, type, token}) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
           },
-          body: JSON.stringify({ service_code: order.name }),
+          body: JSON.stringify({ service_code: order.service_code }),
         })
           .then(async (res) => {
             const data = await res.json()
@@ -73,11 +74,29 @@ function Modal({setIsModalOpen, value, type, token}) {
               setStatus("Sukses")
               setTimeout(() => {
                 dispatch(storeOrder({
+                  service_code: data.data.service_code,
                   name: data.data.service_name,
-                  price: value,
+                  price: data.data.total_amount,
+                  image: order.image,
+                  transaction_type: "PAYMENT",
                   date,
                   time,
                 }))
+
+                fetch(`${apiUrl}/balance`, {
+                  method: 'GET',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                  },
+                })
+                .then(async (res) => {
+                  const result = await res.json()
+                  if (!res.ok) throw new Error(result.message || "Gagal memuat saldo")
+                  dispatch(showBalance(result.data.balance))
+                })
+                .catch(err => console.error("Failed to update balance after transaction", err))
+
               }, 2000)
             })
             .catch((err) => {
