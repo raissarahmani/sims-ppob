@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router'
 import DefaultPic from '../../assets/default.png'
 
 const apiUrl = import.meta.env.VITE_API_URL
@@ -8,6 +9,7 @@ const apiUrl = import.meta.env.VITE_API_URL
 function Welcome() {
   const [firstname, setFirstname] = useState('')
   const [lastname, setLastname] = useState('')
+  const navigate = useNavigate()
 
   const token = useSelector((state) => state.auth.token)
     useEffect(() => {  
@@ -32,17 +34,24 @@ function Welcome() {
       })
       .catch((err) => {
         console.error(err)
-        alert(err.message)
       })
     }, [token])
 
   return (
     <div className='w-2/5' >
-      <div className='w-[50px] h-[50px]'>
-        <img src={DefaultPic} alt={firstname} className='object-fit' />
-      </div>
-      <div className='mt-5 mb-2 text-sm font-semibold'>Selamat datang,</div>
-      <div className='font-bold text-3xl'>{firstname} {lastname}</div>
+      {!token ? (
+        <>
+          <div onClick={() => navigate('/login')} className='my-10 text-lg font-semibold cursor-pointer'>Login untuk menikmati layanan yang tersedia</div>
+        </>
+      ) : (
+        <>
+          <div className='w-[50px] h-[50px]'>
+              <img src={DefaultPic} alt={firstname} className='object-fit' />
+          </div>
+          <div className='mt-5 mb-2 text-sm font-semibold'>Selamat datang,</div>
+          <div className='font-bold text-3xl'>{firstname} {lastname}</div>
+        </>
+      )}
     </div>
   )
 }

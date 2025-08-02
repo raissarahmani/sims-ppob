@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import Service from './Service'
 import Banner from './Banner'
@@ -18,6 +18,7 @@ function getImage(filename) {
 function Home() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const token = useSelector((state) => state.auth.token)
 
   const chooseService = (service) => {
     dispatch(selectService({
@@ -55,11 +56,18 @@ function Home() {
   return (
     <div className='px-30 py-5'>
       <div className='flex flex-row justify-between items-center my-5'>
-        {ServiceList.map((service, i) => (
-          <div key={i} onClick={() => chooseService(service)}>
-            <Service image={getImage(service.service_icon)} name={service.service_name} />
-          </div>
-        ))}
+        {!token ? (
+          <>
+          </>
+        ) : (
+          <>
+            {ServiceList.map((service, i) => (
+              <div key={i} onClick={() => chooseService(service)}>
+                <Service image={getImage(service.service_icon)} name={service.service_name} />
+              </div>
+            ))}
+          </>
+        )}
       </div>
       <div className='text-xs font-semibold'>Temukan promo menarik</div>
       <div 
