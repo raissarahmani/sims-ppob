@@ -6,11 +6,11 @@ const apiUrl = import.meta.env.VITE_API_URL
 
 function ShowMore() {
     const [history, setHistory] = useState([]) 
-    const [active, setActive] = useState(null)
+    const [active, setActive] = useState(new Date().getMonth())
 
     const months = [
+      "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli",
       "Agustus", "September", "Oktober", "November", "Desember",
-      "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli"
     ]
 
     const formatDateTime = (isoString) => {
@@ -42,26 +42,30 @@ function ShowMore() {
       .catch((err) => console.error(err))
     }, [token])
 
+    const transactionsByMonth = Array.from({ length: 12 }, (_, i) => {
+      return history.filter(tx => new Date(tx.created_on).getMonth() === i)
+    })
+
   return (
     <div className='px-30 py-5'>
       <div className='mt-5 mb-2 text-sm font-semibold'>Semua transaksi</div>
       <div className='flex flex-row gap-5'> 
         {months.map((month, i) => (
             <div 
-                onClick={() => setActive(`${month.name}`)} 
+                onClick={() => setActive(i)} 
                 key={i}
-                className={`text-sm cursor-pointer ${active === month ? "font-bold" : "text-[#c6c0c0] font-semibold"}`}
+                className={`text-sm cursor-pointer ${active === i ? "font-bold" : "text-[#c6c0c0] font-semibold"}`}
             >
                 {month}
             </div>
         ))}
       </div>
       <div className='flex flex-col gap-5 my-5'> 
-        {history.length === 0 ? (
-          <div className='flex flex-col items-center text-sm text-[#c6c0c0]'>Maaf tidak ada riwayat transaksi saat ini</div>
+        {transactionsByMonth[active].length === 0 ? (
+          <div className='mt-10 text-center text-sm text-[#c6c0c0]'>Maaf tidak ada riwayat transaksi saat ini</div>
         ) : (
         <>
-          {history.map((transaction, i) => (
+          {transactionsByMonth[active].map((transaction, i) => (
             <div key={i} className='history'>
               <div className='flex flex-col gap-1'>
                 <div className={`text-sm font-bold ${transaction.transaction_type === 'PAYMENT' ? 'text-[#f03c2e]' : 'text-[#64c8b4]'}`}>
