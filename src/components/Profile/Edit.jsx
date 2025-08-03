@@ -128,7 +128,7 @@ function Edit() {
               email: newEmail || email, 
               firstname: newFirstname || firstname, 
               lastname: newLastname || lastname,
-              profile_image: `${apiUrl}/image/${data.data.profile_image} || ${Defaultpic}`
+              profile_image: `${apiUrl}/profile/image/${data.data.profile_image} || ${Defaultpic}`
             }
           }))
 
@@ -157,7 +157,7 @@ function Edit() {
         const data = await res.json()
         if (!res.ok) throw new Error(data.message || "Upload foto gagal")
         
-        setProfilePic(`${apiUrl}/image/${data.data.profile_image}`)
+        setProfilePic(`${apiUrl}/profile/image/${data.data.profile_image}`)
         console.log('Image uploaded:', data)
       } catch (err) {
         console.error(err.message)
