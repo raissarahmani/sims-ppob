@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router'
 // import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import { storeToken } from '../../redux/slices/authSlice'
+import { storeToken, storeUserInfo } from '../../redux/slices/authSlice'
 
 import EmailIcon from '../../assets/email.svg'
 import PassIcon from '../../assets/pass.svg'
@@ -81,9 +81,29 @@ function Login() {
       }
 
       const token = data.data.token
-      dispatch(storeToken({
-        token,
-      }))
+      dispatch(storeToken({token}))
+
+      fetch(`${apiUrl}/profile`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(async (profileRes) => {
+        const profile = await profileRes.json()
+        console.log("Profile fetched:", data)
+        if (!profileRes.ok) {
+          throw new Error(data.msg || 'Gagal mengambil profil')
+        }
+
+        dispatch(storeUserInfo({
+          user: profile.data
+        }))
+      })
+      .catch((err) => {
+        console.error(err)
+      })
 
       navigate('/')
       setEmail('')
