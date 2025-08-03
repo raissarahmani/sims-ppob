@@ -1,24 +1,49 @@
 import React from 'react'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
 import Service from './Service'
 import Banner from './Banner'
 
-import ServiceList from '../../data/services.json'
+// import ServiceList from '../../data/services.json'
 import BannerList from '../../data/banner.json'
 import { selectService } from '../../redux/slices/transactionSlice'
 
-const images = import.meta.glob('../../assets/*.png', { eager: true })
+const apiUrl = import.meta.env.VITE_API_URL
+// const images = import.meta.glob('../../assets/*.png', { eager: true })
 
-function getImage(filename) {
-  return images[`../../assets/${filename}`]?.default
-}
+// function getImage(filename) {
+//   return images[`../../assets/${filename}`]?.default
+// }
 
 function Home() {
+  const [services, setServices] = useState([])
+  const [banner, setBanner] = useState([])
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const token = useSelector((state) => state.auth.token)
+
+  useEffect(() => {
+    fetch(`${apiUrl}/services`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(async (res) => {
+        const data = await res.json()
+        console.log("Service response:", data)
+  
+        if (!res.ok) {
+          throw new Error(data.message || 'Gagal menampilkan layanan')
+        }
+        setServices(data.data || [])
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+    }, [token])
 
   const chooseService = (service) => {
     dispatch(selectService({
@@ -35,6 +60,27 @@ function Home() {
   const [isDragging, setIsDragging] = useState(false);
   const [start, setStart] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+
+  useEffect(() => {
+    fetch(`${apiUrl}/banner`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+      .then(async (res) => {
+        const data = await res.json()
+        console.log("Banner response:", data)
+  
+        if (!res.ok) {
+          throw new Error(data.message || 'Gagal menampilkan promo')
+        }
+        setBanner(data.data || [])
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+    }, [])
 
   const onMouseDown = (e) => {
     setIsDragging(true);
@@ -61,9 +107,9 @@ function Home() {
           </>
         ) : (
           <>
-            {ServiceList.map((service, i) => (
+            {services.map((service, i) => (
               <div key={i} onClick={() => chooseService(service)}>
-                <Service image={getImage(service.service_icon)} name={service.service_name} />
+                <Service image={service.service_icon} name={service.service_name} />
               </div>
             ))}
           </>
@@ -78,7 +124,7 @@ function Home() {
         onMouseUp={onMouseUp}
         onMouseLeave={onMouseLeave}
       >
-        {BannerList.map((banner, i) => (
+        {banner.map((banner, i) => (
           <Banner key={i} src={banner.banner_image} alt={banner.banner_name} />
         ))}
       </div>
