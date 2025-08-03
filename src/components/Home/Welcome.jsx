@@ -12,7 +12,7 @@ function Welcome() {
   const navigate = useNavigate()
 
   const token = useSelector((state) => state.auth.token)
-  const profile_image = useSelector((state) => state.auth.user.profile_image)
+  const profile_image = useSelector((state) => state.auth.user?.profile_image)
     useEffect(() => {  
       fetch(`${apiUrl}/profile`, {
         method: 'GET',
