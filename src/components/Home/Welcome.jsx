@@ -12,7 +12,7 @@ function Welcome() {
   const navigate = useNavigate()
 
   const token = useSelector((state) => state.auth.token)
-  const profile_image = useSelector((state) => state.auth.user?.profile_image)
+  const user = useSelector((state) => state.auth.user)
     useEffect(() => {  
       fetch(`${apiUrl}/profile`, {
         method: 'GET',
@@ -47,7 +47,7 @@ function Welcome() {
       ) : (
         <>
           <div className='w-[50px] h-[50px]'>
-              <img src={profile_image || DefaultPic} alt={firstname} className='object-fit' />
+              <img src={user?.profile_image || DefaultPic} alt={firstname} className='object-fit' />
           </div>
           <div className='mt-5 mb-2 text-sm font-semibold'>Selamat datang,</div>
           <div className='font-bold text-3xl'>{firstname} {lastname}</div>
