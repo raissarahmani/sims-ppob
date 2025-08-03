@@ -18,7 +18,7 @@ function Profile() {
   const dispatch = useDispatch()
 
   const token = useSelector((state) => state.auth.token)
-  const profile_image = useSelector((state) => state.auth.user.profile_image)
+  const user = useSelector((state) => state.auth.user)
   useEffect(() => {
     if (!token) return ('Silahkan login terlebih dahulu')
 
@@ -55,7 +55,7 @@ function Profile() {
   return (
     <div>
       <div className='flex flex-col items-center rounded-full mb-3'>
-          <img src={profile_image || Defaultpic} alt={firstname} className='object-cover' />
+          <img src={user?.profile_image || Defaultpic} alt={firstname} className='object-cover' />
         </div>
         <div className='font-bold text-2xl text-center'>{firstname} {lastname}</div>
         <form className='flex flex-col gap-3 mt-5'>
